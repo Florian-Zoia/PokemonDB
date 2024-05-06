@@ -1,118 +1,90 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import * as React from 'react';
+import { Text } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import TypeSelectionScreen from './screens/TypeSelection';
+import ShowType from './screens/ShowType';
+import ShowPokemon from './screens/showPokemon';
+import FindPokemon from './screens/findPokemon';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+// Initialize the Stack navigator
+const TypeStack = createNativeStackNavigator();
+const PokemonStack = createNativeStackNavigator();
+
+// Initialize the Tab navigator
+const Tab = createBottomTabNavigator();
+
+function TypeStackNavigation() {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+    <TypeStack.Navigator
+      screenOptions={{ headerShown: false }}>
+      {/* <Stack.Screen name="Profile" component={TabNavigation} /> */}
+      <TypeStack.Screen name="TypeSelectionScreen" component={TypeSelectionScreen} />
+      <TypeStack.Screen name="ShowType" component={ShowType} />
+      {/* <Stack.Screen name="ShowPokemon" component={ShowPokemon} /> */}
+    </TypeStack.Navigator>
+  );
+}
+function PokemonStackNavigation() {
+  return (
+    <PokemonStack.Navigator
+      screenOptions={{ headerShown: false }}>
+      {/* <PokemonStack.Screen name="Profile" component={TabNavigation} /> */}
+      {/* <PokemonStack.Screen name="TypeSelectionScreen" component={TypeSelectionScreen} /> */}
+      {/* <PokemonStack.Screen name="ShowType" component={ShowType} /> */}
+      <PokemonStack.Screen name="findPokemon" component={FindPokemon} />
+      <PokemonStack.Screen name="ShowPokemon" component={ShowPokemon} />
+    </PokemonStack.Navigator>
   );
 }
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+function TabNavigation() {
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: '#FFFFFF',
+        tabBarInactiveTintColor: '#B3B3B3',
+        tabBarInactiveBackgroundColor: '#181818',
+        tabBarStyle: {
+          borderTopWidth: 0,
+          backgroundColor: '#181818'
+        }
+      }}>
+      <Tab.Screen
+        name="Typ"
+        component={TypeStackNavigation}
+        options={{
+          tabBarLabel: 'Type',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="pokemon-go" color={color} size={size} />
+          ),
+        }}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+      <Tab.Screen
+        name="Pokemon"
+        component={PokemonStackNavigation}
+        options={{
+          tabBarLabel: 'Pokemon',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="catching-pokemon" color={color} size={size} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
-
-export default App;
+export default function App() {
+  return (
+    <NavigationContainer>
+      <TabNavigation />
+    </NavigationContainer>
+  )
+}
